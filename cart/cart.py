@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.conf import settings
 from shop.models import Product
 
+
 class Cart(object):
     def __init__(self, request):
         """
@@ -10,24 +11,24 @@ class Cart(object):
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
-            cart = self.seesion[settings.CART_SESSION_ID] = {}
+            cart = self.session[settings.CART_SESSION_ID] = {}
             self.cart = cart
 
-    def __init__(self):
-        """
-        Перебираем товары в корзине и получаем товары из базы данных
-        """
-        product_ids = self.cart.keys()
-        products = Product.objects.filter(id__in=product_ids)
-
-        cart = self.copy()
-        for product in products:
-            cart[str(product.id)]['product'] = product
-
-        for item in cart.values():
-            item['price'] = Decimal(item['price'])
-            item['total_price'] = item['price'] * item['quantity']
-            yield item
+    # def __init__(self):
+    #     """
+    #     Перебираем товары в корзине и получаем товары из базы данных
+    #     """
+    #     product_ids = self.cart.keys()
+    #     products = Product.objects.filter(id__in=product_ids)
+    #
+    #     cart = self.copy()
+    #     for product in products:
+    #         cart[str(product.id)]['product'] = product
+    #
+    #     for item in cart.values():
+    #         item['price'] = Decimal(item['price'])
+    #         item['total_price'] = item['price'] * item['quantity']
+    #         yield item
 
     def __len__(self):
         """
@@ -52,7 +53,7 @@ class Cart(object):
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True
 
-    def remove(selfself, product):
+    def remove(self, product):
         """
         Удаляем товар
         """

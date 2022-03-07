@@ -23,8 +23,8 @@ from django.views.static import serve
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('cart/', include('cart.urls', namespace='cart')),
-    path('orders/', include('oreders.urls')),
-    path('', include('shop.urls', namespace ='shop')),
+    path('orders/', include('orders.urls')),
+    path('', include(('shop.urls','shop'), namespace='shop')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
