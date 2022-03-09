@@ -3,6 +3,7 @@ from django.conf import settings
 from shop.models import Product
 
 
+
 class Cart(object):
     def __init__(self, request):
         """
@@ -14,21 +15,20 @@ class Cart(object):
             cart = self.session[settings.CART_SESSION_ID] = {}
             self.cart = cart
 
-    # def __init__(self):
-    #     """
-    #     Перебираем товары в корзине и получаем товары из базы данных
-    #     """
-    #     product_ids = self.cart.keys()
-    #     products = Product.objects.filter(id__in=product_ids)
-    #
-    #     cart = self.copy()
-    #     for product in products:
-    #         cart[str(product.id)]['product'] = product
-    #
-    #     for item in cart.values():
-    #         item['price'] = Decimal(item['price'])
-    #         item['total_price'] = item['price'] * item['quantity']
-    #         yield item
+    def __iter__(self):
+        """
+        Перебираем товары в корзине и получаем товары из базы данных
+        """
+        product_ids = self.cart.keys()
+        products = Product.objects.filter(id__in=product_ids)
+        cart = self.cart.copy()
+        for product in products:
+            cart[str(product.id)]['product'] = product
+
+        for item in cart.values():
+            item['price'] = Decimal(item['price'])
+            item['total_price'] = item['price'] * item['quantity']
+            yield item
 
     def __len__(self):
         """
@@ -57,7 +57,7 @@ class Cart(object):
         """
         Удаляем товар
         """
-        product_id = str(product.id)
+        product_id = product.id.objects.filter()
         if product_id in self.cart:
             del self.cart[product_id]
             self.save()
@@ -67,4 +67,29 @@ class Cart(object):
 
     def clear(self):
         del self.session[settings.CART_SESSION_ID]
+        self.session.modified = True # добавил
         self.save()
+# добавил все, что снизу
+
+    # def __iter__(self):
+    #     """
+    #     Iterate over the items in the cart and get the products
+    #     from the database.
+    #     """
+    #     product_ids = self.cart.keys()
+    #     # get the product objects and add them to the cart
+    #     products = Product.objects.filter(id__in=product_ids)
+    #     for product in products:
+    #         self.cart[str(product.id)]['product'] = product
+    #
+    #     for item in self.cart.values():
+    #         item['price'] = Decimal(item['price'])
+    #         item['total_price'] = item['price'] * item['quantity']
+    #         yield item
+
+
+    # def __len__(self):
+    #     """
+    #     Считаем количество товаров в корзине
+    #     """
+    #     return sum(item['quantity'] for item in self.cart.values())

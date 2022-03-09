@@ -3,26 +3,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!--    7-8 - добавляем css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <title>{% block title %}Книжный магазин{% endblock %}</title>
-    <link href="{% static "shop/css/base.css" %}" rel="stylesheet">
+    <!--    в строке 11 была херня с кавычками как и в detail.html-->
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
 </head>
-<body>
+<body style="color:Red; background-color:#adb5bd">
 <div id="header">
     <a href="/" class="logo">Книжный магазин</a>
 </div>
 <div id="subheader">
-    <div class="cart">
-        {% with total_items=cart|length %}
-        {% if cart|length  > 0%}
-        В корзине:
-        <a href="{% url 'cart:cart_detail' %}">
-            {{ total_items }} шт ,${{ cart.get_total_price }}
-        </a>
-        {% else %}
-        Корзина пуста
-        {% endif %}
-        {% endwith %}
-    </div>
+
 </div>
 <div id="content">
     {% block content %}
